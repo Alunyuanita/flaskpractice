@@ -1,0 +1,58 @@
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+
+# Define a global variable to store the user's name
+user_name = ""
+
+@app.route("/")
+def home():
+    return render_template("home.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html", name=user_name)
+
+@app.route("/set_name", methods=["POST"])
+def set_name():
+    global user_name
+    user_name = request.form["user_name"]
+    return redirect(url_for("contact"))
+
+@app.route("/biodata")
+def biodata():
+    return render_template("template.html", page_title="Biodata")
+
+@app.route("/cv")
+def cv():
+    return render_template("template.html", page_title="CV")
+
+@app.route("/portfolio")
+def portfolio():
+    return render_template("template.html", page_title="Portfolio")
+
+@app.route("/blog")
+def blog():
+    return render_template("template.html", page_title="Blog")
+
+@app.route("/article")
+def article():
+    return render_template("template.html", page_title="Article")
+
+@app.route("/fibonacci", methods=["GET", "POST"])
+def fibonacci():
+    if request.method == "POST":
+        # Calculate Fibonacci and pass it to the template
+        num = int(request.form["number"])
+        result = calculate_fibonacci(num)
+        return render_template("fibonacci.html", result=result)
+    return render_template("input_form.html")
+
+def calculate_fibonacci(n):
+    if n <= 1:
+        return n
+    else:
+        return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
+
+if __name__ == "__main__":
+    app.run(debug=True)
